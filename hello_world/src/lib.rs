@@ -28,11 +28,20 @@ impl CustomProcedure for HelloWorld {
         log::info!("Hello world!");
         log::debug!("params: {params:?}");
 
-        // Dummy exception how to return an error
+        // Return 400 error
         if params.first_number == 0 {
             return Err(RpcError {
                 code: 400,
                 message: String::from("Example of an error -- number cannot be 0."),
+                data: None,
+            });
+        }
+
+        // Return 500 error to simulate failures
+        if params.second_number == 0 {
+            return Err(RpcError {
+                code: 500,
+                message: String::from("Internal server error - simulated failure."),
                 data: None,
             });
         }

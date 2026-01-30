@@ -37,6 +37,19 @@ impl CustomProcedure for HelloWorld {
             });
         }
 
+        // Create a memory spike and cause processing delay
+        let large_array: Vec<i32> = (0..10_000).collect();
+        let mut sum_work = 0i64;
+        for &num in &large_array {
+            sum_work += num as i64;
+            // Do some extra computation to slow things down
+            sum_work = sum_work.wrapping_mul(params.first_number as i64);
+            sum_work = sum_work.wrapping_add(params.second_number as i64);
+        }
+        
+        // Use the result to prevent compiler optimization
+        log::debug!("Completed heavy work: {}", sum_work % 1000);
+
         // Assemble response struct.
         // It will be serialized into the JSON response using serde_json.
         Ok(Output {
